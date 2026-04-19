@@ -15,19 +15,16 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Browsing History")
 public class BrowsingHistoryController {
 
-    // Gezinme gecmisi islemleri servis katmaninda yonetilir
     private final BrowsingHistoryService browsingHistoryService;
 
     @Operation(summary = "Get last 10 viewed products")
     @GetMapping("/browsing-history")
-    // Kullaniciya ait son goruntulenen urunleri getirir
     public ResponseEntity<BrowsingHistoryResponse> getHistory(@PathVariable Long userId) {
         return ResponseEntity.ok(browsingHistoryService.getHistory(userId));
     }
 
     @Operation(summary = "Delete a product from browsing history")
     @DeleteMapping("/browsing-history/{productId}")
-    // Belirli bir urunu kullanicinin gecmisinden siler
     public ResponseEntity<DeleteResponse> deleteFromHistory(
             @PathVariable Long userId,
             @PathVariable Long productId) {

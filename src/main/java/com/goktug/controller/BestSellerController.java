@@ -17,27 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Best Sellers")
 public class BestSellerController {
 
-    // Best seller verisini servis katmanindan alir
     private final BestSellerService bestSellerService;
 
     @Operation(summary = "Get personalized or general best sellers")
     @GetMapping("/best-sellers")
-    // Kullaniciya ozel veya genel cok satanlari dondurur
     public ResponseEntity<BestSellerResponse> getBestSellers(@PathVariable Long userId) {
         return ResponseEntity.ok(bestSellerService.getBestSellers(userId));
     }
 }
-
-/**
- * @RequiredArgsConstructor: Lombok kütüphanesinden gelir.
- *                           'private final' olarak tanımladığın tüm değişkenler
- *                           (BestSellerService gibi) için
- *                           otomatik olarak bir Constructor (yapıcı metod)
- *                           oluşturur.
- *                           Spring bu sayede "BestSellerService" nesnesini
- *                           buraya enjekte eder (Dependency Injection).
- */
-
-/**
- * @Operation: Swagger dokümantasyonu için bu işlemin ne yaptığını açıklar.
- */

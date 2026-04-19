@@ -15,22 +15,17 @@ import java.time.LocalDateTime;
 @Slf4j
 public class BatchServiceImpl implements BatchService {
 
-    // Native SQL sorgularini calistirmak icin kullanilir
     private final EntityManager entityManager;
 
     @Override
     @Transactional
     @Scheduled(fixedRate = 3600000) // 1 saatte bir
-    // ETL: once eski tabloyu temizler, sonra yeni best seller verisini doldurur
     public void runBestSellerETL() {
         log.info("ETL started at {}", LocalDateTime.now());
 
-        // Her calismada sifirdan dogru siralama uretmek icin tablolari temizle
         entityManager.createNativeQuery("TRUNCATE general_best_sellers RESTART IDENTITY").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE category_best_sellers RESTART IDENTITY").executeUpdate();
 
-        // Genel best seller: tum kullanicilarda en cok farkli aliciya ulasan ilk 10
-        // urun
         entityManager.createNativeQuery("""
                     INSERT INTO general_best_sellers (product_id, buyer_count, rank)
                     SELECT product_id, buyer_count, rank FROM (
@@ -43,8 +38,6 @@ public class BatchServiceImpl implements BatchService {
                     ) ranked WHERE rank <= 10
                 """).executeUpdate();
 
-        // Kategori bazli best seller: her kategori icin en cok aliciya ulasan ilk 10
-        // urun
         entityManager
                 .createNativeQuery(
                         """
