@@ -17,10 +17,11 @@ import java.util.List;
 public class BrowsingHistoryServiceImpl implements BrowsingHistoryService {
 
     private final ProductViewRepository productViewRepository;
+    private final IdFormatter idFormatter;
 
     @Override
     public BrowsingHistoryResponse getHistory(Long userId) {
-        String formattedUserId = IdFormatter.formatUserId(userId);
+        String formattedUserId = idFormatter.formatUserId(userId);
         List<ProductView> views = productViewRepository.findRecentViews(formattedUserId);
 
         List<String> products = views.stream().map(ProductView::getProductId).toList();
@@ -29,8 +30,8 @@ public class BrowsingHistoryServiceImpl implements BrowsingHistoryService {
 
     @Override
     public DeleteResponse deleteFromHistory(Long userId, Long productId) {
-        String formattedUserId = IdFormatter.formatUserId(userId);
-        String formattedProductId = IdFormatter.formatProductId(productId);
+        String formattedUserId = idFormatter.formatUserId(userId);
+        String formattedProductId = idFormatter.formatProductId(productId);
 
         ProductView view = productViewRepository.findActiveView(formattedUserId, formattedProductId)
                 .orElseThrow(() -> new NotFoundException("Record not found"));

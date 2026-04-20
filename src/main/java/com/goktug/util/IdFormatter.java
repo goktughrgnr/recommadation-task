@@ -1,12 +1,15 @@
 package com.goktug.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class IdFormatter {
 
-    public static String formatUserId(Long userId) {
+    public String formatUserId(Long userId) {
         return "user-" + userId;
     }
 
-    public static String formatProductId(Long productId) {
+    public String formatProductId(Long productId) {
         return "product-" + productId;
     }
 }

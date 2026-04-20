@@ -21,10 +21,11 @@ public class BestSellerServiceImpl implements BestSellerService {
     private final ProductViewRepository productViewRepository;
     private final GeneralBestSellerRepository generalBestSellerRepository;
     private final CategoryBestSellerRepository categoryBestSellerRepository;
+    private final IdFormatter idFormatter;
 
     @Override
     public BestSellerResponse getBestSellers(Long userId) {
-        String formattedUserId = IdFormatter.formatUserId(userId);
+        String formattedUserId = idFormatter.formatUserId(userId);
         List<String> topCategories = productViewRepository.findTopCategoriesByUserId(formattedUserId);
 
         if (topCategories.isEmpty()) {
