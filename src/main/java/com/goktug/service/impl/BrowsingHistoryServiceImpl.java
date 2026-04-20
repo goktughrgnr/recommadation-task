@@ -2,6 +2,7 @@ package com.goktug.service.impl;
 
 import com.goktug.dto.response.BrowsingHistoryResponse;
 import com.goktug.dto.response.DeleteResponse;
+import com.goktug.exception.NotFoundException;
 import com.goktug.models.ProductView;
 import com.goktug.repository.ProductViewRepository;
 import com.goktug.service.BrowsingHistoryService;
@@ -9,7 +10,6 @@ import com.goktug.util.IdFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,10 +23,7 @@ public class BrowsingHistoryServiceImpl implements BrowsingHistoryService {
         String formattedUserId = IdFormatter.formatUserId(userId);
         List<ProductView> views = productViewRepository.findRecentViews(formattedUserId);
 
-        List<String> products = views.size() < 5
-                ? Collections.emptyList()
-                : views.stream().map(ProductView::getProductId).toList();
-
+        List<String> products = views.stream().map(ProductView::getProductId).toList();
         return new BrowsingHistoryResponse(userId, products, "personalized");
     }
 
@@ -36,7 +33,7 @@ public class BrowsingHistoryServiceImpl implements BrowsingHistoryService {
         String formattedProductId = IdFormatter.formatProductId(productId);
 
         ProductView view = productViewRepository.findActiveView(formattedUserId, formattedProductId)
-                .orElseThrow(() -> new RuntimeException("Record not found"));
+                .orElseThrow(() -> new NotFoundException("Record not found"));
 
         // soft-delete: fiziksel silmek yerine isDeleted=true
         view.setIsDeleted(true);
