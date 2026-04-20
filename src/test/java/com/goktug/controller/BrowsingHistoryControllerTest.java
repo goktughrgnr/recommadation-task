@@ -2,10 +2,11 @@ package com.goktug.controller;
 
 import com.goktug.dto.response.BrowsingHistoryResponse;
 import com.goktug.dto.response.DeleteResponse;
+import com.goktug.exception.NotFoundException;
 import com.goktug.service.BrowsingHistoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -48,7 +49,7 @@ class BrowsingHistoryControllerTest {
     void deleteFromHistory_whenNotFound_returns404() throws Exception {
         // ARRANGE: Servis "kayıt yok" diyerek exception fırlatsın
         when(browsingHistoryService.deleteFromHistory(120L, 999L))
-                .thenThrow(new RuntimeException("Record not found"));
+                .thenThrow(new NotFoundException("Record not found"));
 
         // ACT + ASSERT
         mockMvc.perform(delete("/api/v1/users/120/browsing-history/999"))
